@@ -16,9 +16,9 @@ using Plots
 obj = readdlm("/Users/seb/Desktop/CO2O2HCO3_graphene_project/wham/HCO3/HCO3fullLj_unLP_wc_PC_wham_window51.dat")
 
 (zdot,Udot,Di) = diff_i(obj)
-println(zdot,"angstroms/femtosedonds")
-println(Udot,"kcal/mol*angstrom")
-println(Di,"kT (angstroms^2)*kcal/(mol*femtoseconds)")
+println(zdot," angstroms/femtoseconds")
+println(Udot," kcal/mol*angstrom")
+println(Di," kT (angstroms^2)*kcal/(mol*femtoseconds)")
 
 
 
