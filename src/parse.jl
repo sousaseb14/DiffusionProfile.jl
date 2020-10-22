@@ -6,20 +6,21 @@ function sphere_vol(r)
 end
 
 function diff_i(W)
-    dt = 1
-    t = W[:,1] #time time series
-    z = W[:,2] # z time series
-    U = W[:,3] # Potential energy time series
+    dt = 2 #2 fs timestep
+    t = @view W[:,1] #time time series
+    z = @view W[:,2] # z time series
+    U = @view W[:,3] # Potential energy time series
     dot = Array{Float64,2}(undef,(length(t)-1),2) #initilize array of velocities and energy gradients
     for i = 1:(length(z)-1)
-        dz = z[i+1]-z[i]
-        dot[i,1] = abs(dz/dt)
-        dot[i,2] = abs(U[i+1]-U[i]/dz)
+        dz =  z[i+1] - z[i]
+        dot[i,1] = (dz / dt)^2
+        dot[i,2] = (U[i+1]-U[i]) / dz
     end
     zdot = sqrt(mean(dot[:,1]))
     Udot = mean(dot[:,2])
 
-    Di = zdot/Udot
+
+    Di = (zdot / (Udot / 0.593))*1e-1
     return zdot, Udot, Di
 
 end

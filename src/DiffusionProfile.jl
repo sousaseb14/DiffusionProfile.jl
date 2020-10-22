@@ -9,6 +9,8 @@ include("parse.jl")
 using DelimitedFiles
 using Statistics
 using Plots
+using BenchmarkTools
+
 
 
 
@@ -18,7 +20,9 @@ obj = readdlm("/Users/seb/Desktop/CO2O2HCO3_graphene_project/wham/HCO3/HCO3fullL
 (zdot,Udot,Di) = diff_i(obj)
 println(zdot," angstroms/femtoseconds")
 println(Udot," kcal/mol*angstrom")
-println(Di," kT (angstroms^2)*kcal/(mol*femtoseconds)")
+println(Di," cm^2/s")
+
+@btime diff_i(obj)
 
 
 
