@@ -4,12 +4,12 @@
 #construct correlator from umbrella window time series.
 function corr_i(W)
     dt = 2 #2 fs timestep
-    tCorr = 7500 #time over which correlations expected to die off.
-    z = @view W[:,2] # z time series
+    tCorr = 3000 #time over which correlations expected to die off.
+    z =  W[:,2] .+ 15.0 # z time series
     nSamp = length(z)
     corr = zeros(tCorr,2) #initilize array that will contain correlation averges for a given t.
     norm = zeros(tCorr,1) #array of normalizations for different t.
-    for i in 1:(nSamp-tCorr-1) #loop over all samples
+    for i in 1:(nSamp-tCorr-1) #loop over all samples (as separate time origins)
         tMax = nSamp
         if i == 1
             tMax = tCorr
@@ -32,25 +32,22 @@ function corr_i(W)
         corr[k,2] = corr[k,2]/norm[k]
     end
 
-    return corr
-end
+    ##################################
+    #Below I make the resolution for longer times more coarse, to get rid of some of the noise
+    #that might impact numerical integration.
+    corr_cut = zeros(trunc(Int,750+2250/150),2)
+    idx = 1
+    for kk = 1:750
+        corr_cut[kk,2] = corr[kk,2]
+        corr_cut[kk,1] = corr[kk,1]
+        idx = idx + 1
+    end
+    for jj in 751:150:tCorr
+        corr_cut[idx,2] = corr[jj,2]
+        corr_cut[idx,1] = corr[jj,1]
+        idx = idx + 1
+    end
+    ##################################
 
-
-
-# functions can also be defined more succinctly
-quadratic(a, sqr_term, b) = (-b + sqr_term) / 2a
-
-# calculates x for 0 = a*x^2+b*x+c, arguments types can be defined in function definitions
-function quadratic2(a::Float64, b::Float64, c::Float64)
-    # unlike other languages 2a is equivalent to 2*a
-    # a^2 is used instead of a**2 or pow(a,2)
-    sqr_term = sqrt(b^2-4a*c)
-    r1 = quadratic(a, sqr_term, b)
-    r2 = quadratic(a, -sqr_term, b)
-    # multiple values can be returned from a function using tuples
-    # if the return keyword is omitted, the last term is returned
-    r1, r2
-
-
-
+    return corr_cut
 end
