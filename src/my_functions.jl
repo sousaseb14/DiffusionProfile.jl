@@ -1,7 +1,4 @@
-# function to calculate the <δz(t)δ(0)> and its itegration in time
-# for local diffusion coefficient from time series of single observable.
-
-#construct correlator from umbrella window time series.
+#Construct correlator from umbrella window time series.
 function corr_i(W,mean)
     dt = 2 #2 fs timestep
     tCorr = 3000 #time over which correlations expected to die off.
@@ -56,6 +53,7 @@ function corr_i(W,mean)
     return corr, corr_cut, var0, tCorr
 end
 
+#Integrate correlation function from 0 → "∞". Trapezoid rule.
 function Nint_corr(δδ)
     l = length(δδ[:,2])
     s = 0
